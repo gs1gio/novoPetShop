@@ -15,11 +15,9 @@ on:
 
 jobs:
   build-and-test:
-
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout do código
         uses: actions/checkout@v5
 
@@ -28,25 +26,24 @@ jobs:
         with:
           distribution: temurin
           java-version: '26'
-          cache: maven
 
       - name: Verificar versão do Java
         run: |
           java -version
           javac -version
 
-      - name: Compilar projeto
-        run: mvn clean compile
+      - name: Verificar targets do Ant
+        run: ant -projecthelp
+
+      - name: Limpar e compilar
+        run: ant clean jar
 
       - name: Executar testes unitários
-        run: mvn test
+        run: ant test
 
-      - name: Gerar aplicação
-        run: mvn package -DskipTests
-
-      - name: Upload do JAR
+      - name: Upload da aplicação
         if: success()
         uses: actions/upload-artifact@v6
         with:
-          name: calculadora-java
-          path: target/*.jar
+          name: petshop-java
+          path: dist/*.jar
